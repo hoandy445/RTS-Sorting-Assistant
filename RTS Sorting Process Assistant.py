@@ -76,8 +76,14 @@ Press "Enter" to begin...''')
     # NO
     clear_screen("(ITEM SORTING GUIDANCE)")
     if check_full_case() is False:
-        # move to disposal question
-        quit()
+        
+        # should the item be disposed?
+        # YES        
+        clear_screen("(ITEM SORTING GUIDANCE)")
+        if check_disposal() is True:
+            # move to disposal result
+            print("disposal result")
+        
     # YES
     else:
         
@@ -85,8 +91,14 @@ Press "Enter" to begin...''')
         # YES
         clear_screen("(ITEM SORTING GUIDANCE)")
         if check_quality_issue() is True:
-        # move to disposal question
-            quit()
+
+            # should the item be disposed?
+            # YES
+            clear_screen("(ITEM SORTING GUIDANCE)")
+            if check_disposal() is True:
+                # move to disposal result
+                print("disposal result")
+            
         # NO 
         else:
 
@@ -98,12 +110,17 @@ Press "Enter" to begin...''')
                 result_return_to_stock()
             # NO
             else:
+
                 # similar item available?
                 # YES
                 clear_screen("(ITEM SORTING GUIDANCE)")
                 if check_similar_item() is True:
                     clear_screen("(ITEM SORTING GUIDANCE)")
-                    result_identical_item_return_to_stock()                  
+                    result_identical_item_return_to_stock()    
+                # NO
+                else:
+                    clear_screen("(ITEM SORTING GUIDANCE)")
+                    result_overage()              
         
 def get_user_choice():
     while True:
@@ -199,6 +216,25 @@ Is there an identical item available?''')
     user_choice = get_user_choice()
     return user_choice
 
+def check_disposal():
+    print("DISPOSAL")
+    print('''When assessing whether an item should be disposed of, you wiil need to use your senses to make the judgement. Here are some clues that an item may need to be thrown away:
+
+- Smell. Trust your nose. While seafood often has a distinct "fishy" odor, spoiled food emits a stronger, foul smell of rot or chemicals. 
+
+- Freezer burn. Freezer burn is characterized by dry, grayish-brown spots cause by air reaching the surface of the food. Freezer burn is not harmful, but is unattractive to customers and not appealing to eat. 
+An item lightly freezer burned may be resold, but an item that is badly freezer burned cannot.
+
+- Thawed and refrozen. This is due to improper storage. Some indicators that an item may include:
+    - An item that was originally "IQF" (Individually Quick-Frozen), but has turned into a solid block
+    - Liquids or juices that have frozen and dried on the packaging or leaked onto other items
+
+Do any of these qualities apply to the item?
+''')
+    user_choice = get_user_choice()
+    return user_choice
+    
+
 def result_return_to_stock():
     print('RESULT:')
     print('''The item should be returned to stock. Print a label for the item to be scanned into a location and put the item in the location. When returning items to stock,
@@ -212,6 +248,11 @@ a case of "Brand A Swai Fillets" can be repackaged, then attached with printed l
 "Brand B Swai Fillets".
 ''')
 
+def result_overage(): ### add prompt to record information
+    print("RESULT:")
+    print('''The item is an overage. An overage is a discrepancy - a difference, between our warehouse management system inventory and our physical inventory. We physically have the item, but it is not accounted for in the system inventory. 
+Label the item as "overage" (this can be handwritten on a sticker) and put the item on an overage pallet. An overage pallet can be found on the floor within the RTS area. Once an overage pallet reaches bin height, it should be wrapped, labeled 
+as "OVERAGE" and inbounded (slotted into a bin) within the RTS area.''')
 
 
 ### MAIN PROGRAM ###
