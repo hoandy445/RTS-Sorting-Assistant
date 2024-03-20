@@ -29,7 +29,7 @@ def display_introduction():
     print(
 f'''
 INTRODUCTION
-Welcome, {current_user}, to the Return to Stock (RTS) Sorting Process Assistant. This application has been developed to provide guidance for sorting through RTS items, which can often appear as a confusing assortment of random and damaged goods. As an RTS role, our main goals are as follows:
+Welcome, {current_user}, to the Return to Stock (RTS) Sorting Assistant. This application has been developed to provide guidance for sorting through RTS items, which can often appear as a confusing assortment of random and damaged goods. As an RTS role, our main goals are as follows:
 
 - Returning items to appropriate locations within the warehouse, to be sold and retained permanently by end consumers.
 - Serving as a form of quality control by separating products with quality issues from the main inventory.
@@ -72,55 +72,68 @@ Press "Enter" to begin...''')
         print('ITEM IDENTIFICATION')
         input('''Let's start by identifying the item. Please bring the case, or a sample from the case into the office for identification. Press "Enter" once the item has been identified.''')
         
-    # is the item a full case?
-    # NO
-    clear_screen("(ITEM SORTING GUIDANCE)")
-    if check_full_case() is False:
-        
-        # should the item be disposed?
-        # YES        
-        clear_screen("(ITEM SORTING GUIDANCE)")
-        if check_disposal() is True:
-            # move to disposal result
-            print("disposal result")
-        
+    # missing weight or quality issues?
     # YES
-    else:
-        
-        # any quality issues?
+    clear_screen("(ITEM SORTING GUIDANCE)")
+    if check_full_case() is False or check_quality_issue() is True:
+
+        # should the item be disposed?
         # YES
         clear_screen("(ITEM SORTING GUIDANCE)")
-        if check_quality_issue() is True:
-
-            # should the item be disposed?
-            # YES
+        if check_disposal() is True:
             clear_screen("(ITEM SORTING GUIDANCE)")
-            if check_disposal() is True:
-                # move to disposal result
-                print("disposal result")
-            
+            result_disposal()
         # NO 
         else:
-
-            # on inventory?
+            
+            # is the item a type of crustacean?
             # YES
-            clear_screen("(ITEM SORTING GUIDANCE)") 
-            if check_on_inventory() is True:
+            clear_screen("(ITEM SORTING GUIDANCE)")
+            if check_crustacean() is True:
                 clear_screen("(ITEM SORTING GUIDANCE)")
-                result_return_to_stock()
+                result_crustacean()
+            
             # NO
             else:
 
-                # similar item available?
+            # is the item crab meat cup(s)?
                 # YES
                 clear_screen("(ITEM SORTING GUIDANCE)")
-                if check_similar_item() is True:
+                if check_crab_meat_cups() is True:
                     clear_screen("(ITEM SORTING GUIDANCE)")
-                    result_identical_item_return_to_stock()    
+                    result_crab_meat_cups()
                 # NO
                 else:
+
+                    # is the item head-on shrimp?
                     clear_screen("(ITEM SORTING GUIDANCE)")
-                    result_overage()              
+                    if check_head_on_shrimp() is True:
+                        clear_screen("(ITEM SORTING GUIDANCE)")
+                        result_head_on_shrimp()
+
+        
+    # NO 
+    else:
+
+        # on inventory?
+        # YES
+        clear_screen("(ITEM SORTING GUIDANCE)") 
+        if check_on_inventory() is True:
+            clear_screen("(ITEM SORTING GUIDANCE)")
+            result_return_to_stock()
+        # NO
+        else:
+
+            # similar item available?
+            # YES
+            clear_screen("(ITEM SORTING GUIDANCE)")
+            if check_similar_item() is True:
+                clear_screen("(ITEM SORTING GUIDANCE)")
+                result_identical_item_return_to_stock()    
+            # NO
+            else:
+                clear_screen("(ITEM SORTING GUIDANCE)")
+                result_overage()              
         
 def get_user_choice():
     while True:
@@ -141,7 +154,7 @@ def check_item_identification(): # is the item identifiable?
 def check_full_case(): # is the item a full case?
     print('FULL CASE?')
     print(
-'''Is the item a full case, with none of the weight missing? This can often be determined from reading the packaging. Look for either a printed total weight, or how the item was packed, which we will call the "pack size".
+'''Is the item a full case, with none of the weight missing? This can be determined from reading the packaging and ensuring none of the contents are missing. Look for either a printed total weight, or how the item was packed, which we will call the "pack size".
 Here are some examples of how this information may be printed:
 
 Examples of pack sizes:
@@ -155,6 +168,7 @@ Is the item a full case?''')
     return user_choice
 
 def check_quality_issue(): # any quality issues?
+    clear_screen("(ITEM SORTING GUIDANCE)")
     print('QUALITY ISSUES?')
     print(
 '''Let's examine the item for any quality issues. If the contents of the package or item are compromised in any way, the item should be kept separate from the main inventory to ensure food safety and customer satisfaction.
@@ -182,7 +196,7 @@ def check_on_inventory(): # is the item on inventory?
 - Inside the "Item Number" space, we can enter keywords pertaining to the item, then press "F2" to find results. 
 
 Being more broad with keyword choices will pull a larger list of items that may be relevant. For example, typing in simply "catfish" will return a large list of items, all related to catfish.
-The opposite is also true. Entering more specific keywords will return a smaller, more concise list of items. For example, typing in "7 superior catfish" will only return a size that starts with "7", the brand "Superior", and items related to catfish.
+Conversely, entering more specific keywords will return a smaller, more concise list of items. For example, typing in "7 superior catfish" will only return a size that starts with "7", the brand "Superior", and items related to catfish.
 It may take more than one keyword search to find the item you are looking for within Seasoft.
 
 If the quantity of the item showing on hand is greater than 0, the item is on inventory. If the quantity is 0 or less, or you are unable to find the item, the item can be considered as not on inventory.
@@ -202,9 +216,9 @@ with another "Snapper Fillet Skin-on".
           
 - Matching item size. A "4/6oz Snapper Fillet" (snapper fillets that range from 4 ounces to 6 ounces) can be put together with another "4/6oz Snapper Fillet". A "4oz Snapper Fillet" can be put together with a 
 "4/6oz Snapper Fillet" as it falls into the range of "4/6oz". If the information is not printed anywhere on the packaging, this can be determined by weighing the item on an ounce scale. 
-          - Examples of item sizes:
-          16/20 Shrimp = 16 to 20 individual shrimp per pound of shrimp
-          3/4-1# Snapper Fillet = Snapper fillets that range from 3/4 of a pound to 1 pound
+    - Examples of item sizes:
+        16/20 Shrimp = 16 to 20 individual shrimp per pound of shrimp
+        3/4-1# Snapper Fillet = Snapper fillets that range from 3/4 of a pound to 1 pound
           
 - Matching weight and pack size. Not only the weight must match, but also the pack size. A 10x2 (10 bags, each weighing 2LBS) case can be put with another brand of a 10x2 item, but a 4x5 (4 bags, each weighing 5LBS)
 cannot be put together with a 10x2, even though the items both weigh 20LBS in total.
@@ -216,7 +230,7 @@ Is there an identical item available?''')
     user_choice = get_user_choice()
     return user_choice
 
-def check_disposal():
+def check_disposal(): # should the item be thrown away?
     print("DISPOSAL")
     print('''When assessing whether an item should be disposed of, you wiil need to use your senses to make the judgement. Here are some clues that an item may need to be thrown away:
 
@@ -226,19 +240,44 @@ def check_disposal():
 An item lightly freezer burned may be resold, but an item that is badly freezer burned cannot.
 
 - Thawed and refrozen. This is due to improper storage. Some indicators that an item may include:
-    - An item that was originally "IQF" (Individually Quick-Frozen), but has turned into a solid block
-    - Liquids or juices that have frozen and dried on the packaging or leaked onto other items
+  - An item that was originally "IQF" (Individually Quick-Frozen), but has turned into a solid block
+  - Liquids or juices that have frozen and dried on the packaging or leaked onto other items
 
 Do any of these qualities apply to the item?
 ''')
     user_choice = get_user_choice()
     return user_choice
     
+def check_crustacean(): # is it a crustacean?
+    print('CRUSTACEAN?')
+    print('''Is this item a damaged case of any crustacean type? This includes snow crab legs, king crab legs, Jonah crab claws, lobster tails, whole lobster, Dungeness crab legs, etc. 
+This does not include cups of any type of crab meat (cocktail fingers, clawmeat, and lump crabmeat) or stuffed crabs. ''')
+    user_choice = get_user_choice()
+    return user_choice
+
+def check_crab_meat_cups(): # is it crab meat cups?
+    print('CRAB MEAT CUPS?')
+    print('''Is the item crab meat cup(s? These items are packaged in 1LB plastic cups, and include cocktail fingers, claw meat, and lump crab meat.''')
+    user_choice = get_user_choice()
+    return user_choice
+
+def check_head_on_shrimp(): # is it head-on shrimp?
+    print('DISCOLORED HEAD-ON SHRIMP?')
+    print('''Head-on shrimp is, as the name implies, shell-on shrimp with the head still attached. Shrimp are harvested in colors of white, neutral (brown), and pink. After harvesting, shrimp will begin to darken in color due
+to an enzymatic process that causes oxidation. This is similar to how the inside of an apple might darken after being cut. Darkened shrimp are not harmful, but is unattractive to consumers.
+
+Is this item head-on shrimp that has darkened in color?''')
+    user_choice = get_user_choice()
+    return user_choice
+
+def check_block_shrimp(): # is it block-frozen shrimp?
+    print('BLOCK SHRIMP?')
+    print('''Is this item block-frozen shrimp? These items are rectangular blocks of shrimp, typically packaged in cardboard cartons.''')
 
 def result_return_to_stock():
     print('RESULT:')
-    print('''The item should be returned to stock. Print a label for the item to be scanned into a location and put the item in the location. When returning items to stock,
-the item you are returning and the item at the location must be the same. If you are unable to find a pallet of the item you are returning, the item may be scanned
+    print('''The item should be returned to stock. Print a label for the item to be scanned into a location and put the item an appropriate location. When returning items to stock,
+the item you are returning and the item at the location must be the same. If you are unable to find a pallet of the item you are returning, the item should be scanned
 into a location within the RTS area.''')
 
 def result_identical_item_return_to_stock():
@@ -246,14 +285,46 @@ def result_identical_item_return_to_stock():
     print('''The item should be repackaged in a plain box with printed labels on all sides of the box and returned to stock. The label will match the item you are putting it with. For example,
 a case of "Brand A Swai Fillets" can be repackaged, then attached with printed labels for "Brand B Swai Fillets", assuming the items are identical. The "Brand A Swai Fillet" will be sold as
 "Brand B Swai Fillets".
+          
+When returning items to stock, the item you are returning and the item at the location must be the same. If you are unable to find a pallet of the item you are returning, the item should be scanned
+into a location within the RTS area.
 ''')
 
 def result_overage(): ### add prompt to record information
     print("RESULT:")
-    print('''The item is an overage. An overage is a discrepancy - a difference, between our warehouse management system inventory and our physical inventory. We physically have the item, but it is not accounted for in the system inventory. 
+    print('''The item is an overage. An overage is a discrepancy - a difference, between the warehouse management system inventory and physical inventory. We physically have the item, but it is not accounted for in the system inventory. 
 Label the item as "overage" (this can be handwritten on a sticker) and put the item on an overage pallet. An overage pallet can be found on the floor within the RTS area. Once an overage pallet reaches bin height, it should be wrapped, labeled 
 as "OVERAGE" and inbounded (slotted into a bin) within the RTS area.''')
 
+def result_disposal():
+    print('RESULT:')
+    print('''The item should be disposed. It is not safe to eat, and or not resellable.  If the item is not on inventory, it can be dumped into a vat (large, cube-shaped tub used to store waste), or directly into the dumpster.
+If the item is on inventory, notify the office before disposal.''')
+
+def result_crustacean(): # type C item
+    print('RESULT:')
+    print('''This item should be labeled "C" (this can be handwritten on a sticker) and put together on a pallet with other type "C" items. Crustacean type items are generally high value. Because these type C items are damaged, we must separate
+them from the main inventory as they cannot be sold for their original value, but can be sold to willing consumers for a percentage of their original value to regain some of the cost.
+
+A type C pallet can be found on the floor of the RTS area. If there is no type C pallet on the floor, a new type C pallet can be started. Once a type C pallet reaches bin height, the pallet should be labeled "Type C", then inbounded (slotted into a bin) in the RTS area.''')
+
+def result_head_on_shrimp(): # type P item
+    print('RESULT:')
+    print('''This item should be labeled "P" (this can be handwritten on a sticker) and put together on a pallet with other type "P" items. Because the head-on shrimp are too discolored to be accepted by customers, we are separating it from
+the main inventory. These type P pallets will be sent to a "peeling plant" to be peeled, repackaged, and returned to the warehouse in a state that is sellable.
+          
+A type P pallet can be found on the floor of the RTS area. If there is no type P pallet on the floor, a new type P pallet can be started. Once a type P pallet reaches bin height, the pallet should be labeled "Type P", then inbounded (slotted into a bin) in the RTS area.''')
+
+def result_crab_meat_cups(): # type F item; result needs changed when re-cupping is possible
+    print('RESULT:')
+    print('''This item should be put into a box and labeled "F" (this can be handwritten on a sticker) and put together on a pallet with other type "F" items. The warehouse currently does not have the supplies to re-cup these items and return them to stock, and so
+will be held in the RTS area until supplies are ordered.
+          
+A type F pallet can be found on the floor of the RTS area. If there is no type F pallet on the floor, a new type F pallet can be started. Once a type F pallet reaches bin height, the pallet should be labeled "Type F", then inbounded (slotted into a bin) in the RTS area.''')
+
+def result_block_shrimp():
+    print('RESULT:')
+    print('''''')
 
 ### MAIN PROGRAM ###
     
