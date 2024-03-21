@@ -5,6 +5,7 @@ import datetime
 import os
 
 
+
 ### FUNCTIONS ###
 
 # open file and read file, return blank dictionary on failure
@@ -58,90 +59,105 @@ def clear_screen(persisting_display_message = ""):
     if len(persisting_display_message) > 0:
         print(persisting_display_message, "\n")
         
-# ITEM SORTING GUIDANCE FUNCTIONS 
 def item_sorting_guidance():
-    clear_screen("(ITEM SORTING GUIDANCE)")
-    input('''Item Sorting Guidance is a series of yes or no questions, designed to help you make a decision on what should be done with an item. Enter "Y" if your answer is yes, or "N" for no.
-Press "Enter" to begin...''')
-    clear_screen("(ITEM SORTING GUIDANCE)")
-
-    # is the item identifiable?
-    # NO
-    if check_item_identification() is False:
-        clear_screen("(ITEM SORTING GUIDANCE)")
-        print('ITEM IDENTIFICATION')
-        input('''Let's start by identifying the item. Please bring the case, or a sample from the case into the office for identification. Press "Enter" once the item has been identified.''')
-        
-    # missing weight or quality issues?
-    # YES
-    clear_screen("(ITEM SORTING GUIDANCE)")
-    if check_full_case() is False or check_quality_issue() is True:
-
-        # should the item be disposed?
-        # YES
-        clear_screen("(ITEM SORTING GUIDANCE)")
-        if check_disposal() is True:
+    try:
+        while True:
             clear_screen("(ITEM SORTING GUIDANCE)")
-            result_disposal()
-        # NO 
-        else:
-            
-            # is the item a type of crustacean?
+            input('''Item Sorting Guidance is a series of yes or no questions, designed to help you make a decision on what should be done with an item. Enter "Y" if your answer is yes, or "N" for no.
+Press "Enter" to begin...''')
+            clear_screen("(ITEM SORTING GUIDANCE)")
+            # is the item identifiable?
+            # NO
+            if check_item_identification() is False:
+                clear_screen("(ITEM SORTING GUIDANCE)")
+                print('ITEM IDENTIFICATION')
+                input('''Let's start by identifying the item. Please bring the case, or a sample from the case into the office for identification. Press "Enter" once the item has been identified.''')               
+            # missing weight or quality issues?
             # YES
             clear_screen("(ITEM SORTING GUIDANCE)")
-            if check_crustacean() is True:
-                clear_screen("(ITEM SORTING GUIDANCE)")
-                result_crustacean()
-            
-            # NO
-            else:
-
-            # is the item crab meat cup(s)?
+            if check_full_case() is False or check_quality_issue() is True:
+                # should the item be disposed?
                 # YES
                 clear_screen("(ITEM SORTING GUIDANCE)")
-                if check_crab_meat_cups() is True:
+                if check_disposal() is True:
                     clear_screen("(ITEM SORTING GUIDANCE)")
-                    result_crab_meat_cups()
+                    result_disposal()
+                # NO 
+                else:                    
+                    # is the item a type of crustacean?
+                    # YES
+                    clear_screen("(ITEM SORTING GUIDANCE)")
+                    if check_crustacean() is True:
+                        clear_screen("(ITEM SORTING GUIDANCE)")
+                        result_crustacean()                   
+                    # NO
+                    else:
+                    # is the item crab meat cup(s)?
+                        # YES
+                        clear_screen("(ITEM SORTING GUIDANCE)")
+                        if check_crab_meat_cups() is True:
+                            clear_screen("(ITEM SORTING GUIDANCE)")
+                            result_crab_meat_cups()
+                        # NO
+                        else:
+                            # is the item head-on shrimp?
+                            clear_screen("(ITEM SORTING GUIDANCE)")
+                            # YES
+                            if check_head_on_shrimp() is True:
+                                clear_screen("(ITEM SORTING GUIDANCE)")
+                                result_head_on_shrimp()
+                            # NO 
+                            else:
+                                # is the item block-frozen shrimp?
+                                clear_screen("(ITEM SORTING GUIDANCE)")
+                                if check_block_shrimp() is True:
+                                    clear_screen("(ITEM SORTING GUIDANCE)")
+                                    result_block_shrimp()
+                                # NO
+                                else:                               
+                                # is the item Type B?
+                                    # YES
+                                    clear_screen("(ITEM SORTING GUIDANCE)")
+                                    if check_type_b() is True:
+                                        clear_screen("(ITEM SORTING GUIDANCE)")
+                                        result_type_b()
+                                    # NO
+                                    else:
+                                        clear_screen("(ITEM SORTING GUIDANCE)")
+                                        result_type_a()                
+            # NO 
+            else:
+                # on inventory?
+                # YES
+                clear_screen("(ITEM SORTING GUIDANCE)") 
+                if check_on_inventory() is True:
+                    clear_screen("(ITEM SORTING GUIDANCE)")
+                    result_return_to_stock()
                 # NO
                 else:
-
-                    # is the item head-on shrimp?
+                    # similar item available?
+                    # YES
                     clear_screen("(ITEM SORTING GUIDANCE)")
-                    if check_head_on_shrimp() is True:
+                    if check_similar_item() is True:
                         clear_screen("(ITEM SORTING GUIDANCE)")
-                        result_head_on_shrimp()
+                        result_identical_item_return_to_stock()    
+                    # NO
+                    else:
+                        clear_screen("(ITEM SORTING GUIDANCE)")
+                        result_overage()
 
-        
-    # NO 
-    else:
-
-        # on inventory?
-        # YES
-        clear_screen("(ITEM SORTING GUIDANCE)") 
-        if check_on_inventory() is True:
-            clear_screen("(ITEM SORTING GUIDANCE)")
-            result_return_to_stock()
-        # NO
-        else:
-
-            # similar item available?
-            # YES
-            clear_screen("(ITEM SORTING GUIDANCE)")
-            if check_similar_item() is True:
-                clear_screen("(ITEM SORTING GUIDANCE)")
-                result_identical_item_return_to_stock()    
-            # NO
-            else:
-                clear_screen("(ITEM SORTING GUIDANCE)")
-                result_overage()              
+    except main_menu:
+        clear_screen()                            
         
 def get_user_choice():
     while True:
-        user_choice = input('(Y/N)\n> ').upper().strip()
+        user_choice = input('\n(Y/N)\n(M: Return to main menu)\n\n> ').upper().strip()
         if user_choice == 'Y':
             return True
         elif user_choice == 'N':
             return False
+        elif user_choice == 'M':
+            raise main_menu
         else:
             print('Invalid input. Enter "Y" if your answer is yes, or "N" for no.')
 
@@ -273,12 +289,27 @@ Is this item head-on shrimp that has darkened in color?''')
 def check_block_shrimp(): # is it block-frozen shrimp?
     print('BLOCK SHRIMP?')
     print('''Is this item block-frozen shrimp? These items are rectangular blocks of shrimp, typically packaged in cardboard cartons.''')
+    user_choice = get_user_choice()
+    return user_choice
+
+def check_type_b(): # are the contents of the item edible, but damaged?
+    print("TYPE B ITEM?")
+    print('''Examine the item for the following qualities:
+
+- Damaged bags
+- Loose contents, such as shrimp or fish that have left its packaging and been exposed to air
+          
+Do these qualities describe the item?''')
+    user_choice = get_user_choice()
+    return user_choice
 
 def result_return_to_stock():
     print('RESULT:')
     print('''The item should be returned to stock. Print a label for the item to be scanned into a location and put the item an appropriate location. When returning items to stock,
 the item you are returning and the item at the location must be the same. If you are unable to find a pallet of the item you are returning, the item should be scanned
 into a location within the RTS area.''')
+    
+    input('\nInput "Enter" to restart Item Sorting Guidance...')
 
 def result_identical_item_return_to_stock():
     print("RESULT:")
@@ -289,24 +320,41 @@ a case of "Brand A Swai Fillets" can be repackaged, then attached with printed l
 When returning items to stock, the item you are returning and the item at the location must be the same. If you are unable to find a pallet of the item you are returning, the item should be scanned
 into a location within the RTS area.
 ''')
+    
+    input('\nPress "Enter" to restart Item Sorting Guidance...')
 
 def result_overage(): ### add prompt to record information
     print("RESULT:")
     print('''The item is an overage. An overage is a discrepancy - a difference, between the warehouse management system inventory and physical inventory. We physically have the item, but it is not accounted for in the system inventory. 
+
 Label the item as "overage" (this can be handwritten on a sticker) and put the item on an overage pallet. An overage pallet can be found on the floor within the RTS area. Once an overage pallet reaches bin height, it should be wrapped, labeled 
 as "OVERAGE" and inbounded (slotted into a bin) within the RTS area.''')
+    
+    input('\nPress "Enter" to restart Item Sorting Guidance...')
 
 def result_disposal():
     print('RESULT:')
-    print('''The item should be disposed. It is not safe to eat, and or not resellable.  If the item is not on inventory, it can be dumped into a vat (large, cube-shaped tub used to store waste), or directly into the dumpster.
+    print('''The item should be disposed. It is not safe to eat, and or not resellable.  If the item is not on inventory, it can be dumped into a waste vat (large, cube-shaped tub), or directly into the dumpster.
 If the item is on inventory, notify the office before disposal.''')
+    input('\nPress "Enter" to restart Item Sorting Guidance...')
 
 def result_crustacean(): # type C item
     print('RESULT:')
     print('''This item should be labeled "C" (this can be handwritten on a sticker) and put together on a pallet with other type "C" items. Crustacean type items are generally high value. Because these type C items are damaged, we must separate
-them from the main inventory as they cannot be sold for their original value, but can be sold to willing consumers for a percentage of their original value to regain some of the cost.
+them from the main inventory as they cannot be sold for their original value, but can be sold to willing consumers for a percentage of their original value to recover some of the cost.
+
+Ensure the following information is clearly labeled on the box (if applicable). This will only be necessary if the original label is not attached:
+- Size (4/UP, 5/8 etc.)
+- Type of food (lobster, snow crab, etc.)
+- The way the food has been processed (legs, tail, etc.)
+- Country of origin
+- Brand name
+- Total weight
+[ Example of item label: 4/UP Snow Crab Legs Canada OCI 25# ]    
 
 A type C pallet can be found on the floor of the RTS area. If there is no type C pallet on the floor, a new type C pallet can be started. Once a type C pallet reaches bin height, the pallet should be labeled "Type C", then inbounded (slotted into a bin) in the RTS area.''')
+    
+    input('\nPress "Enter" to restart Item Sorting Guidance...')
 
 def result_head_on_shrimp(): # type P item
     print('RESULT:')
@@ -314,6 +362,8 @@ def result_head_on_shrimp(): # type P item
 the main inventory. These type P pallets will be sent to a "peeling plant" to be peeled, repackaged, and returned to the warehouse in a state that is sellable.
           
 A type P pallet can be found on the floor of the RTS area. If there is no type P pallet on the floor, a new type P pallet can be started. Once a type P pallet reaches bin height, the pallet should be labeled "Type P", then inbounded (slotted into a bin) in the RTS area.''')
+    
+    input('\nPress "Enter" to restart Item Sorting Guidance...')
 
 def result_crab_meat_cups(): # type F item; result needs changed when re-cupping is possible
     print('RESULT:')
@@ -321,15 +371,72 @@ def result_crab_meat_cups(): # type F item; result needs changed when re-cupping
 will be held in the RTS area until supplies are ordered.
           
 A type F pallet can be found on the floor of the RTS area. If there is no type F pallet on the floor, a new type F pallet can be started. Once a type F pallet reaches bin height, the pallet should be labeled "Type F", then inbounded (slotted into a bin) in the RTS area.''')
+    
+    input('\nPress "Enter" to restart Item Sorting Guidance...')    
 
 def result_block_shrimp():
     print('RESULT:')
-    print('''''')
+    print('''This item and its contents should be put into a vat (large, cube-shaped tub) that contains other block shrimp cartons. Block shrimp are generally only sold by the case, and not sold by the piece (individual cartons). These block shrimp vats
+are shipped out periodically to a "peeling plant", where the shrimp are reprocessed and repackaged, then returned to the warehouse in a sellable condition.
+          
+Block shrimp vats can be found in the RTS area. If all current vats are filled, or there are no vats, place the contents of the item into an empty vat. Move this vat to the RTS area.''')
+    
+    input('\nPress "Enter" to restart Item Sorting Guidance...')
+    
+def result_type_b(): # checking for busted bags, loose food
+    print('RESULT:')
+    print('''This item should be put into a box and labeled "B" (this can be handwritten on a sticker) and put together on a pallet with other type "B" items. 
+
+Ensure the following information is clearly labeled on the box (if applicable). This will only be necessary if the original label is not attached:
+- Size (4oz, 4/6oz, 2/4LB, 16/20, etc.)
+- Type of food (shrimp, catfish, flounder, chicken, etc.)
+- The way the food has been processed (fillet, tail-on, headless, wing, etc.)
+- Color (white, neutral, pink, scarlet, crimson, etc.)
+- Country of origin
+- How the item is packaged (IQF, IVP, IWP, etc.)
+- Brand name
+- Total weight
+[ Example of item label: 31/35 Shrimp P&D Tail-off White Ecuador IQF Vanoni 7# ]          
+          
+The item is in poor condition, likely due to mishandling, and must be kept separate from the main inventory. Type B items will be sold to willing customers at a heavily discounted price, or potentially disposed of in the future.
+        
+A type B pallet can be found on the floor of the RTS area. If there is no type B pallet on the floor, a new type B pallet can be started. Once a type B pallet reaches bin height, the pallet should be labeled "Type B", then inbounded (slotted into a bin) in the RTS area.''')
+
+    input('\nPress "Enter" to restart Item Sorting Guidance...')
+
+def result_type_a(): # item is good quality
+    print('RESULT:')
+    print('''This item should be put into a box and labeled "A" (this can be handwritten on a sticker) and put together on a pallet with other type "A" items. 
+
+Ensure the following information is clearly labeled on the box (if applicable). This will only be necessary if the original label is not attached:
+- Size (4oz, 4/6oz, 2/4LB, 16/20, etc.)
+- Type of food (shrimp, catfish, flounder, chicken, etc.)
+- The way the food has been processed (fillet, tail-on, headless, wing, etc.)
+- Color (white, neutral, pink, scarlet, crimson, etc.)
+- Country of origin
+- How the item is packaged (IQF, IVP, IWP, etc.)
+- Brand name
+- Pack size (4X5LB, 1x10LB, etc.) or total weight if not applicable
+[ Example of item label: 31/35 Shrimp P&D Tail-off White Ecuador IQF Vanoni 4x2# ]
+
+The item is in acceptable condition, but cannot be sold for its full value as it is likely not a full case, and so must be kept from the main inventory. Type A items will be sold to willing customers at cost, or a slightly discounted price.
+          
+A type A pallet can be found on the floor of the RTS area. If there is no type A pallet on the floor, a new type A pallet can be started. Once a type A pallet reaches bin height, the pallet should be labeled "Type A", then inbounded (slotted into a bin) in the RTS area.''')
+    
+    input('\nPress "Enter" to restart Item Sorting Guidance...')
+
+
+
+
+
 
 ### MAIN PROGRAM ###
     
 # change working directory to specified path
 os.chdir(r"C:\Users\hoand\Desktop\RTS_Data")
+
+# used to return to main menu
+class main_menu(Exception): pass
 
 # get current date and user name
 current_time = datetime.datetime.now()
@@ -339,14 +446,18 @@ clear_screen()
 
 user_data = read_file()
 
+
 display_introduction()
 clear_screen()
 
-display_main_menu()
-user_choice = input('Enter a selection\n> ')
+while True:
+    display_main_menu()
+    user_choice = input('Enter a selection\n> ')
 
-if user_choice == '1':
-    item_sorting_guidance()
+    if user_choice == '1':
+        item_sorting_guidance()
+    elif user_choice =='4':
+        break
 
 
 
